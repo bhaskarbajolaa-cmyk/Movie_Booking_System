@@ -12,10 +12,24 @@ A console-based application for booking movie tickets built in C++. This project
 - **FR7 — Ticketing**: after successful payment, a formatted ticket is printed showing booking ID, movie name, screen, time, booked seat numbers, total amount, and CONFIRMED status.
 - **FR8 — Cancellation**: a customer cancels an existing CONFIRMED booking. The associated seats immediately revert to AVAILABLE status and the payment is refunded.
 
-## Non-Functional Requirements (NFR)
+## Non-Functional Requirements & Assumptions
 - **NFR1 — Modularity**: The system must enforce strict modularity by keeping exactly one class per file without using header files.
 - **NFR2 — Extensibility**: The payment system must be open for extension but closed for modification, meaning adding NetBanking must not require edits to the existing `BookingService` class.
-- **NFR3 — Robustness**: The system must validate bad input (like invalid seat numbers or incorrect menu choices) gracefully by displaying a clear message without crashing.
+- **NFR3 — Robustness**: Invalid input is handled gracefully with clear feedback to the customer, ensuring the system does not crash.
+- **NFR4 — Simulated Payments**: Actual payment gateway processing is out of scope — payment methods are simulated to succeed (or fail based on hardcoded demo data).
+- **NFR5 — Static Seed Data**: Currently playing movies, screens, and shows are static seed data initialized at startup, rather than being fetched in real-time from a database.
+
+## Noun-Verb Analysis (Class Identification)
+Based on the problem statement, the following nouns were identified to become classes:
+- **Movie**: has its own data and identity.
+- **Cinema**: has its own data and identity.
+- **Customer**: interacts with the system.
+- **Seat**: has a number, type, and price.
+- **Show**: has timing and screen information.
+- **Booking**: represents booking information and state.
+- **Screen**: a cinema can contain multiple screens.
+- **ShowSeat**: tracks whether a specific seat is booked for a specific show.
+- **Payment**: represents a distinct transaction.
 
 ## Architecture & Diagrams
 The system is built with modularity in mind. Each class resides in its own file.
