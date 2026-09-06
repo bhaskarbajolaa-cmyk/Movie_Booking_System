@@ -31,6 +31,22 @@ private:
     Customer* currentCustomer;
     Booking* myBooking;
 
+    int readIntChoice() {
+        int choice;
+        if (!(cin >> choice)) {
+            if (cin.eof()) return 0;
+            cin.clear();
+            cin.ignore(10000, '\n');
+            return -1;
+        }
+        return choice;
+    }
+
+    void displayMenu() {
+        cout << "\n===== MOVIE TICKET BOOKING =====\n";
+        cout << "1. Movies  2. Book  3. Cancel  4. My tickets   0. Exit\nChoose: ";
+    }
+
     void addStandardSeats(Screen* scr) {
         for (int i = 1; i <= 4; ++i) scr->addSeat(new Seat(i, "SILVER"));
         for (int i = 1; i <= 3; ++i) scr->addSeat(new Seat(i, "GOLD"));
@@ -128,8 +144,7 @@ private:
 
     Payment* processPaymentInput() {
         cout << "\nPay by: 1.UPI   2.Card   3.Cash > ";
-        int pChoice;
-        cin >> pChoice;
+        int pChoice = readIntChoice();
         if (pChoice == 1) return new UPIPayment("upi@bank");
         if (pChoice == 2) return new CardPayment("1234-5678");
         if (pChoice == 3) return new CashPayment();
@@ -142,8 +157,7 @@ private:
             cout << "  [" << i+1 << "] " << movies[i]->getTitle() << "\n";
         }
         cout << "> ";
-        int mChoice;
-        cin >> mChoice;
+        int mChoice = readIntChoice();
         if (mChoice < 1 || mChoice > (int)movies.size()) return nullptr;
 
         cout << "Available shows:\n";
@@ -158,8 +172,7 @@ private:
             cout << "  [" << i+1 << "] Screen-" << availableShows[i]->getScreen()->getScreenNo() << " " << availableShows[i]->getStartTime() << "\n";
         }
         cout << "Choose show: ";
-        int sChoice;
-        cin >> sChoice;
+        int sChoice = readIntChoice();
         if (sChoice < 1 || sChoice > (int)availableShows.size()) return nullptr;
         
         return availableShows[sChoice-1];
@@ -235,12 +248,11 @@ public:
 
     void start() {
         while (true) {
-            cout << "\n===== MOVIE TICKET BOOKING =====\n";
-            cout << "1. Movies  2. Book  3. Cancel  4. My tickets   0. Exit\nChoose: ";
-            int choice;
-            if (!(cin >> choice)) {
-                if (cin.eof()) break;
-                cin.clear(); cin.ignore(10000, '\n');
+            displayMenu();
+            int choice = readIntChoice();
+            
+            if (choice == -1) {
+                cout << "Invalid input. Please enter a number.\n";
                 continue;
             }
 
