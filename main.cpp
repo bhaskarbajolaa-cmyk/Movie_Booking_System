@@ -19,19 +19,7 @@
 
 using namespace std;
 
-// Helper function to split string by comma
-vector<string> splitString(const string& str, char delimiter) {
-    vector<string> tokens;
-    string token;
-    istringstream tokenStream(str);
-    while (getline(tokenStream, token, delimiter)) {
-        // Trim spaces
-        token.erase(remove_if(token.begin(), token.end(), ::isspace), token.end());
-        if(!token.empty())
-            tokens.push_back(token);
-    }
-    return tokens;
-}
+// No split string helper needed
 
 void printSeatLayout(Show* show) {
     cout << "\n  SCREEN-" << show->getScreen()->getScreenNo() << "   " 
@@ -153,7 +141,13 @@ int main() {
             string seatInput;
             cin >> seatInput;
 
-            vector<string> chosenSeatNames = splitString(seatInput, ',');
+            vector<string> chosenSeatNames;
+            stringstream ss(seatInput);
+            string token;
+            while (getline(ss, token, ',')) {
+                if (!token.empty()) chosenSeatNames.push_back(token);
+            }
+            
             vector<ShowSeat*> selectedSeats;
             
             bool invalidSeat = false;
