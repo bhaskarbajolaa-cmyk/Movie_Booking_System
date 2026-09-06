@@ -68,8 +68,8 @@ int main() {
     // 1. System Setup
     Cinema cinema("PVR");
     
-    Movie m1("3 Idiots", 170, "Hindi");
-    Movie m2("Interstellar", 169, "English");
+    Movie m1("The Matrix", 136, "English");
+    Movie m2("Spirited Away", 125, "Japanese");
 
     Screen scr1(1);
     Screen scr2(2);
