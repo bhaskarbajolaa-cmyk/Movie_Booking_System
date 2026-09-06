@@ -310,5 +310,56 @@ sequenceDiagram
 4. Run the executable:
    ```bash
    ./app
-   ```
    *(On Windows, use `.\app.exe`)*
+
+## Demo Run
+
+```text
+===== MOVIE TICKET BOOKING =====
+1. Movies  2. Book  3. Cancel  4. My tickets   0. Exit
+Choose: 1
+
+  [1] Dhurandar (Hindi) 145 min
+  [2] Odyssey (English) 160 min
+
+===== MOVIE TICKET BOOKING =====
+1. Movies  2. Book  3. Cancel  4. My tickets   0. Exit
+Choose: 2
+
+Choose movie:
+  [1] Dhurandar
+  [2] Odyssey
+> 1
+
+Available shows:
+  [1] Screen-1 06:00 PM
+Choose show: 1
+
+  SCREEN-1   06:00 PM |   Dhurandar
+  SILVER   A1[ ] A2[X] A3[ ] A4[ ] 
+  GOLD     B1[ ] B2[ ] B3[X] 
+  PLATINUM C1[ ] C2[ ] 
+
+  ( [ ] = available   [X] = booked )
+
+Seats (e.g. A1,B2): A1,B1
+
+  A1 SILVER Rs.150
+  B1 GOLD   Rs.250
+  TOTAL          Rs.400
+
+Pay by: 1.UPI   2.Card   3.Cash > 1
+[UPI] Rs.400 paid successfully via upi@bank
+
+================ TICKET ================
+ Booking ID : BK1001
+ Movie      : Dhurandar
+ Screen     : Screen-1    06:00 PM
+ Seats      : A1, B1
+ Amount     : Rs.400        Status: CONFIRMED
+========================================
+
+===== MOVIE TICKET BOOKING =====
+1. Movies  2. Book  3. Cancel  4. My tickets   0. Exit
+Choose: 0
+```
