@@ -19,5 +19,13 @@ public:
         this->phoneNo = "N/A";
     }
 
+    string getName() const {
+        return name;
+    }
+
+    string getPhoneNo() const {
+        return phoneNo;
+    }
+
 
 };

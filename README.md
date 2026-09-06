@@ -85,6 +85,8 @@ classDiagram
         +getStartTime() String
         +getShowSeats() vector~ShowSeat*~
         +addShowSeat(ShowSeat*) void
+        +displaySeatLayout() void
+        +getSeatsByNames(vector~String~) vector~ShowSeat*~
     }
 
     class ShowSeat {
@@ -114,7 +116,6 @@ classDiagram
         +getBooking(Customer*) Booking*
         +getBooking(int) Booking*
         +getBookingId(Customer*) int
-        +bookingProcess(Customer*) void
         +processPayment(Booking*, Payment*) bool
         +cancelBooking(int) bool
     }

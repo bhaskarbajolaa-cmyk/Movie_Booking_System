@@ -32,6 +32,10 @@ public:
         return seats;
     }
 
+    vector<Show*> getShows() const {
+        return shows;
+    }
+
     void addSeat(Seat* seat) {
         seats.push_back(seat);
     }

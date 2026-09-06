@@ -57,6 +57,10 @@ public:
         return totalAmount;
     }
 
+    Customer* getCustomer() const {
+        return customer;
+    }
+
     Show* getShow() const {
         return show;
     }

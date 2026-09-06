@@ -47,11 +47,23 @@ public:
         return newBooking;
     }
 
+    Booking* getBooking(Customer* customer) {
+        if (customerBookings.find(customer) != customerBookings.end()) {
+            return customerBookings[customer];
+        }
+        return nullptr;
+    }
+
     Booking* getBooking(int bookingId) {
         if (bookings.find(bookingId) != bookings.end()) {
             return bookings[bookingId];
         }
         return nullptr;
+    }
+
+    int getBookingId(Customer* customer) {
+        Booking* b = getBooking(customer);
+        return b ? b->getBookingId() : -1;
     }
 
     bool processPayment(Booking* booking, Payment* payment) {

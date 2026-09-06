@@ -7,8 +7,8 @@
 #include "02_Seat.cpp"
 #include "06_ShowSeat.cpp"
 #include "03_Screen.cpp"
-#include "04_Cinema.cpp"
 #include "05_Show.cpp"
+#include "04_Cinema.cpp"
 #include "07_Customer.cpp"
 #include "08_Booking.cpp"
 #include "09_Payment.cpp"
@@ -19,15 +19,45 @@
 
 using namespace std;
 
-// Class handling the UI state to avoid passing 4+ parameters around
+// Data Loading (Separated from UI)
+void addStandardSeats(Screen* scr) {
+    for (int i = 1; i <= 4; ++i) scr->addSeat(new Seat(i, "SILVER"));
+    for (int i = 1; i <= 3; ++i) scr->addSeat(new Seat(i, "GOLD"));
+    for (int i = 1; i <= 2; ++i) scr->addSeat(new Seat(i, "PLATINUM"));
+}
+
+void setupDummyData(Cinema* cinema) {
+    Movie* m1 = new Movie("Dhurandar", 145, "Hindi");
+    Movie* m2 = new Movie("Odyssey", 160, "English");
+
+    Screen* scr1 = new Screen(1);
+    Screen* scr2 = new Screen(2);
+    addStandardSeats(scr1);
+    addStandardSeats(scr2);
+    
+    cinema->addScreen(scr1);
+    cinema->addScreen(scr2);
+
+    Show* show1 = new Show(1, m1, scr1, "06:00 PM");
+    for (Seat* s : scr1->getSeats()) show1->addShowSeat(new ShowSeat(s));
+    
+    show1->getShowSeats()[1]->bookSeat();
+    show1->getShowSeats()[6]->bookSeat();
+
+    Show* show2 = new Show(2, m2, scr2, "09:00 PM");
+    for (Seat* s : scr2->getSeats()) show2->addShowSeat(new ShowSeat(s));
+
+    scr1->addShow(show1);
+    scr2->addShow(show2);
+}
+
+// Single Responsibility: Console menu and input reading
 class CinemaMenu {
 private:
-    Cinema cinema;
-    vector<Movie*> movies;
-    vector<Show*> shows;
-    BookingService bookingService;
-    PriceCalculator priceCalculator;
-    TicketPrinter ticketPrinter;
+    Cinema* cinema;
+    BookingService* bookingService;
+    PriceCalculator* priceCalculator;
+    TicketPrinter* ticketPrinter;
     Customer* currentCustomer;
     Booking* myBooking;
 
@@ -47,70 +77,7 @@ private:
         cout << "1. Movies  2. Book  3. Cancel  4. My tickets   0. Exit\nChoose: ";
     }
 
-    void addStandardSeats(Screen* scr) {
-        for (int i = 1; i <= 4; ++i) scr->addSeat(new Seat(i, "SILVER"));
-        for (int i = 1; i <= 3; ++i) scr->addSeat(new Seat(i, "GOLD"));
-        for (int i = 1; i <= 2; ++i) scr->addSeat(new Seat(i, "PLATINUM"));
-    }
-
-    void setupDummyData() {
-        Movie* m1 = new Movie("Dhurandar", 145, "Hindi");
-        Movie* m2 = new Movie("Odyssey", 160, "English");
-        movies.push_back(m1); movies.push_back(m2);
-
-        Screen* scr1 = new Screen(1);
-        Screen* scr2 = new Screen(2);
-        addStandardSeats(scr1);
-        addStandardSeats(scr2);
-        
-        cinema.addScreen(scr1);
-        cinema.addScreen(scr2);
-
-        Show* show1 = new Show(1, m1, scr1, "06:00 PM");
-        for (Seat* s : scr1->getSeats()) show1->addShowSeat(new ShowSeat(s));
-        
-        // Simulate pre-booked seats
-        show1->getShowSeats()[1]->bookSeat();
-        show1->getShowSeats()[6]->bookSeat();
-
-        Show* show2 = new Show(2, m2, scr2, "09:00 PM");
-        for (Seat* s : scr2->getSeats()) show2->addShowSeat(new ShowSeat(s));
-
-        scr1->addShow(show1);
-        scr2->addShow(show2);
-        shows.push_back(show1); shows.push_back(show2);
-    }
-
-    void printSeatLayout(Show* show) {
-        cout << "\n  SCREEN-" << show->getScreen()->getScreenNo() << "   " 
-             << show->getStartTime() << " |   " << show->getMovie()->getTitle() << "\n";
-        
-        vector<ShowSeat*> silver, gold, platinum;
-        for (ShowSeat* ss : show->getShowSeats()) {
-            string t = ss->getSeat()->getSeatType();
-            if (t == "SILVER") silver.push_back(ss);
-            else if (t == "GOLD") gold.push_back(ss);
-            else if (t == "PLATINUM") platinum.push_back(ss);
-        }
-
-        auto printRow = [](const string& label, const vector<ShowSeat*>& row) {
-            cout << "  " << label << "   ";
-            for (ShowSeat* ss : row) {
-                Seat* s = ss->getSeat();
-                char prefix = (label == "SILVER") ? 'A' : (label == "GOLD" ? 'B' : 'C');
-                string seatName = string(1, prefix) + to_string(s->getSeatNo());
-                cout << seatName << (ss->isBooked() ? "[X] " : "[ ] ");
-            }
-            cout << "\n";
-        };
-
-        printRow("SILVER", silver);
-        printRow("GOLD", gold);
-        printRow("PLATINUM", platinum);
-        cout << "\n  ( [ ] = available   [X] = booked )\n";
-    }
-
-    vector<ShowSeat*> getValidSeatsFromInput(Show* show) {
+    vector<string> parseSeatInput() {
         cout << "\nSeats (e.g. A1,B2): ";
         string seatInput;
         cin >> seatInput;
@@ -121,25 +88,7 @@ private:
         while (getline(ss, token, ',')) {
             if (!token.empty()) chosenNames.push_back(token);
         }
-        
-        vector<ShowSeat*> selected;
-        for (const string& seatName : chosenNames) {
-            bool found = false;
-            for (ShowSeat* ssObj : show->getShowSeats()) {
-                Seat* s = ssObj->getSeat();
-                char prefix = (s->getSeatType() == "SILVER") ? 'A' : (s->getSeatType() == "GOLD" ? 'B' : 'C');
-                if (string(1, prefix) + to_string(s->getSeatNo()) == seatName) {
-                    selected.push_back(ssObj);
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                cout << "Invalid seat identifier: " << seatName << "\n";
-                return {};
-            }
-        }
-        return selected;
+        return chosenNames;
     }
 
     Payment* processPaymentInput() {
@@ -153,6 +102,7 @@ private:
 
     Show* selectShow() {
         cout << "\nChoose movie:\n";
+        vector<Movie*> movies = cinema->listMovies();
         for (size_t i = 0; i < movies.size(); ++i) {
             cout << "  [" << i+1 << "] " << movies[i]->getTitle() << "\n";
         }
@@ -161,10 +111,7 @@ private:
         if (mChoice < 1 || mChoice > (int)movies.size()) return nullptr;
 
         cout << "Available shows:\n";
-        vector<Show*> availableShows;
-        for (Show* s : shows) {
-            if (s->getMovie() == movies[mChoice-1]) availableShows.push_back(s);
-        }
+        vector<Show*> availableShows = cinema->findShows(movies[mChoice-1]);
         
         if(availableShows.empty()) { cout << "No shows available.\n"; return nullptr; }
         
@@ -183,7 +130,7 @@ private:
         for (ShowSeat* ss : selectedSeats) {
             Seat* s = ss->getSeat();
             char prefix = (s->getSeatType() == "SILVER") ? 'A' : (s->getSeatType() == "GOLD" ? 'B' : 'C');
-            cout << "  " << prefix << s->getSeatNo() << " " << s->getSeatType() << " Rs." << priceCalculator.calculateSeatPrice(s) << "\n";
+            cout << "  " << prefix << s->getSeatNo() << " " << s->getSeatType() << " Rs." << priceCalculator->calculateSeatPrice(s) << "\n";
         }
         cout << "  TOTAL          Rs." << total << "\n";
     }
@@ -196,9 +143,9 @@ private:
             return;
         }
 
-        if (bookingService.processPayment(b, payment)) {
+        if (bookingService->processPayment(b, payment)) {
             myBooking = b;
-            ticketPrinter.printTicket(myBooking);
+            ticketPrinter->printTicket(myBooking);
         }
     }
 
@@ -206,15 +153,19 @@ private:
         Show* selectedShow = selectShow();
         if (!selectedShow) return;
 
-        printSeatLayout(selectedShow);
+        selectedShow->displaySeatLayout();
         
-        vector<ShowSeat*> selectedSeats = getValidSeatsFromInput(selectedShow);
-        if (selectedSeats.empty()) return;
+        vector<string> seatNames = parseSeatInput();
+        vector<ShowSeat*> selectedSeats = selectedShow->getSeatsByNames(seatNames);
+        if (selectedSeats.empty()) {
+            cout << "Invalid seat selection.\n";
+            return;
+        }
 
-        float total = priceCalculator.calculateBookingTotal(selectedSeats);
+        float total = priceCalculator->calculateBookingTotal(selectedSeats);
         printReceipt(selectedSeats, total);
 
-        Booking* b = bookingService.createBooking(currentCustomer, selectedShow, selectedSeats, total);
+        Booking* b = bookingService->createBooking(currentCustomer, selectedShow, selectedSeats, total);
         if (b) {
             processBookingPayment(b);
         }
@@ -222,7 +173,7 @@ private:
 
     void handleCancellation() {
         if (myBooking && myBooking->getStatus() == "CONFIRMED") {
-            if (bookingService.cancelBooking(myBooking->getBookingId())) {
+            if (bookingService->cancelBooking(myBooking->getBookingId())) {
                 cout << "Booking " << myBooking->getBookingId() << " cancelled successfully.\n";
                 Refund* refund = dynamic_cast<Refund*>(myBooking->getPayment());
                 if (refund) refund->refund(myBooking->getTotalAmount());
@@ -234,16 +185,14 @@ private:
     }
 
 public:
-    CinemaMenu() : cinema("PVR") {
+    CinemaMenu(Cinema* c, BookingService* bs, PriceCalculator* pc, TicketPrinter* tp) 
+        : cinema(c), bookingService(bs), priceCalculator(pc), ticketPrinter(tp) {
         myBooking = nullptr;
         currentCustomer = new Customer("John Doe", "1234567890");
-        setupDummyData();
     }
 
     ~CinemaMenu() {
         delete currentCustomer;
-        for(Movie* m : movies) delete m;
-        for(Show* s : shows) delete s;
     }
 
     void start() {
@@ -258,14 +207,16 @@ public:
 
             switch (choice) {
                 case 0: return;
-                case 1:
+                case 1: {
+                    vector<Movie*> movies = cinema->listMovies();
                     for (size_t i = 0; i < movies.size(); ++i) 
                         cout << "  [" << i+1 << "] " << movies[i]->getDetails() << "\n";
                     break;
+                }
                 case 2: handleBooking(); break;
                 case 3: handleCancellation(); break;
                 case 4:
-                    if (myBooking && myBooking->getStatus() == "CONFIRMED") ticketPrinter.printTicket(myBooking);
+                    if (myBooking && myBooking->getStatus() == "CONFIRMED") ticketPrinter->printTicket(myBooking);
                     else cout << "No active tickets found.\n";
                     break;
                 default: cout << "Invalid choice.\n";
@@ -275,7 +226,15 @@ public:
 };
 
 int main() {
-    CinemaMenu menu;
+    Cinema cinema("PVR");
+    setupDummyData(&cinema);
+
+    BookingService bookingService;
+    PriceCalculator priceCalculator;
+    TicketPrinter ticketPrinter;
+
+    CinemaMenu menu(&cinema, &bookingService, &priceCalculator, &ticketPrinter);
     menu.start();
+
     return 0;
 }

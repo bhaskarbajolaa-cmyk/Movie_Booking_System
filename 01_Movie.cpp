@@ -20,6 +20,10 @@ public:
         return title;
     }
 
+    int getDurationMin() const {
+        return durationMin;
+    }
+
     string getDetails() const {
         return title + " (" + language + ") " + to_string(durationMin) + " min";
     }
