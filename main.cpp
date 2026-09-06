@@ -68,8 +68,9 @@ int main() {
     // 1. System Setup
     Cinema cinema("PVR");
     
-    Movie m1("The Matrix", 136, "English");
-    Movie m2("Spirited Away", 125, "Japanese");
+    Movie m1("Dhurandar", 145, "Hindi");
+    Movie m2("Odyssey", 160, "English");
+    Movie m3("Spiderman: Brand New Day", 130, "English");
 
     Screen scr1(1);
     Screen scr2(2);
@@ -122,8 +123,9 @@ int main() {
         if (choice == 0) {
             break;
         } else if (choice == 1) {
-            cout << "\n  [1] " << m1.getTitle() << "      " << m1.getDetails().substr(m1.getDetails().find('(')+1, m1.getDetails().find(')')-m1.getDetails().find('(')-1) << "   " << m1.getDurationMin() << " min\n";
-            cout << "  [2] " << m2.getTitle() << "  " << m2.getDetails().substr(m2.getDetails().find('(')+1, m2.getDetails().find(')')-m2.getDetails().find('(')-1) << " " << m2.getDurationMin() << " min\n";
+            cout << "\n  [1] " << m1.getDetails() << "\n";
+            cout << "  [2] " << m2.getDetails() << "\n";
+            cout << "  [3] " << m3.getDetails() << "\n";
         } else if (choice == 2) {
             cout << "\nChoose movie: ";
             int mChoice;
