@@ -1,0 +1,10 @@
+*.exe
+*.pdf
+*.png
+*.xlsx
+~$*.xlsx
+test_input.txt
+.vscode/
+.vs/
+*.o
+*.obj
