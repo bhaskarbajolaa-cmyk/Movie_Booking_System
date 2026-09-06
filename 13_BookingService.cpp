@@ -12,10 +12,9 @@ using namespace std;
 
 class BookingService {
 private:
-    map<int, Booking*> bookings; // Using int as key instead of Customer* since customer might have multiple bookings. Or map<Customer*, vector<Booking*>>
+    map<int, Booking*> bookings;
     map<Customer*, Booking*> customerBookings; 
 
-    // OOP Concept: Static Members (generate unique booking IDs)
     static int nextBookingId;
 
 public:
@@ -48,13 +47,6 @@ public:
         return newBooking;
     }
 
-    Booking* getBooking(Customer* customer) {
-        if (customerBookings.find(customer) != customerBookings.end()) {
-            return customerBookings[customer];
-        }
-        return nullptr;
-    }
-    
     Booking* getBooking(int bookingId) {
         if (bookings.find(bookingId) != bookings.end()) {
             return bookings[bookingId];
@@ -62,19 +54,8 @@ public:
         return nullptr;
     }
 
-    int getBookingId(Customer* customer) {
-        Booking* b = getBooking(customer);
-        return b ? b->getBookingId() : -1;
-    }
-
-    void bookingProcess(Customer* customer) {
-        // Empty skeleton - actual interactive process might be driven by main.cpp menu
-    }
-
     bool processPayment(Booking* booking, Payment* payment) {
         booking->setPayment(payment);
-        
-        // OOP Concept: Runtime Polymorphism
         bool success = payment->pay(booking->getTotalAmount());
         
         if (success) {

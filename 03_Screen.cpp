@@ -10,8 +10,8 @@ class Seat; // Even if not included here, assuming it's available
 class Screen {
 private:
     int screenNo;
-    vector<Show*> shows; // Association to Show. 
-    vector<Seat*> seats; // OOP Concept: Composition (Screen owns Seats)
+    vector<Show*> shows; 
+    vector<Seat*> seats;
 
 public:
     Screen(int screenNo) {
@@ -30,10 +30,6 @@ public:
 
     vector<Seat*> getSeats() const {
         return seats;
-    }
-
-    vector<Show*> getShows() const {
-        return shows;
     }
 
     void addSeat(Seat* seat) {

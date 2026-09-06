@@ -11,17 +11,13 @@ private:
 
 public:
     Movie(string title, int durationMin, string language) {
-        this->title = title; // OOP Concept: this Keyword
+        this->title = title;
         this->durationMin = durationMin;
         this->language = language;
     }
 
     string getTitle() const {
         return title;
-    }
-
-    int getDurationMin() const {
-        return durationMin;
     }
 
     string getDetails() const {

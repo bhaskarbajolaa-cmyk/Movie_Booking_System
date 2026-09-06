@@ -13,9 +13,9 @@ class Seat;
 class Show {
 private:
     int showId;
-    Movie* movie; // OOP Concept: Aggregation (Show borrows Movie)
+    Movie* movie;
     Screen* screen; 
-    vector<ShowSeat*> showSeats; // OOP Concept: Composition (Show owns ShowSeats)
+    vector<ShowSeat*> showSeats;
     string startTime; 
 
 public:
@@ -30,10 +30,6 @@ public:
         for (ShowSeat* ss : showSeats) {
             delete ss;
         }
-    }
-
-    int getShowId() const {
-        return showId;
     }
 
     Movie* getMovie() const {

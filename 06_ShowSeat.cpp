@@ -9,7 +9,7 @@ class Seat;
 class ShowSeat {
 private:
     string status; // AVAILABLE / BOOKED
-    Seat* seat;    // OOP Concept: Aggregation (ShowSeat refers to an existing Seat)
+    Seat* seat;
 
 public:
     ShowSeat(Seat* seat) {
@@ -17,7 +17,6 @@ public:
         this->status = "AVAILABLE";
     }
 
-    // OOP Concept: Encapsulation (modify status through specific methods)
     bool isBooked() const {
         return status == "BOOKED";
     }

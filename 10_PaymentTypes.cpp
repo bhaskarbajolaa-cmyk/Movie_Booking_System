@@ -5,7 +5,6 @@
 
 using namespace std;
 
-// OOP Concept: Inheritance (CashPayment inherits from Payment)
 class CashPayment : public Payment {
 public:
     bool pay(float amount) override {

@@ -13,9 +13,9 @@ class Payment;
 class Booking {
 private:
     int bookingId;
-    vector<ShowSeat*> bookedSeats; // OOP Concept: Aggregation
-    Customer* customer;            // OOP Concept: Aggregation
-    Show* show;                    // OOP Concept: Aggregation
+    vector<ShowSeat*> bookedSeats;
+    Customer* customer;           
+    Show* show;
     string status; // PENDING / CONFIRMED / FAILED / CANCELLED
     Payment* payment; 
     float totalAmount;
@@ -55,10 +55,6 @@ public:
 
     float getTotalAmount() const {
         return totalAmount;
-    }
-
-    Customer* getCustomer() const {
-        return customer;
     }
 
     Show* getShow() const {

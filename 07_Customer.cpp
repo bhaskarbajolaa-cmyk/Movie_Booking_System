@@ -9,7 +9,6 @@ private:
     string phoneNo;
 
 public:
-    // OOP Concept: Compile-Time Polymorphism (overloaded constructors)
     Customer(string name, string phoneNo) {
         this->name = name;
         this->phoneNo = phoneNo;
@@ -20,11 +19,5 @@ public:
         this->phoneNo = "N/A";
     }
 
-    string getName() const {
-        return name;
-    }
 
-    string getPhoneNo() const {
-        return phoneNo;
-    }
 };
