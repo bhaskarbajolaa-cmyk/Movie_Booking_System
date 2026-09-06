@@ -13,11 +13,9 @@ A console-based application for booking movie tickets built in C++. This project
 - **FR8 — Cancellation**: a customer cancels an existing CONFIRMED booking. The associated seats immediately revert to AVAILABLE status and the payment is refunded.
 
 ## Non-Functional Requirements & Assumptions
-- **NFR1 — Modularity**: The system must enforce strict modularity by keeping exactly one class per file without using header files.
-- **NFR2 — Extensibility**: The payment system must be open for extension but closed for modification, meaning adding NetBanking must not require edits to the existing `BookingService` class.
-- **NFR3 — Robustness**: Invalid input is handled gracefully with clear feedback to the customer, ensuring the system does not crash.
-- **NFR4 — Simulated Payments**: Actual payment gateway processing is out of scope — payment methods are simulated to succeed (or fail based on hardcoded demo data).
-- **NFR5 — Static Seed Data**: Currently playing movies, screens, and shows are static seed data initialized at startup, rather than being fetched in real-time from a database.
+- **NFR1 — Robustness**: Invalid input is handled gracefully with clear feedback to the customer, ensuring the system does not crash.
+- **NFR2 — Simulated Payments**: Actual payment gateway processing is out of scope — payment methods are simulated to succeed (or fail based on hardcoded demo data).
+- **NFR3 — Static Seed Data**: Currently playing movies, screens, and shows are static seed data initialized at startup, rather than being fetched in real-time from a database.
 
 ## Noun-Verb Analysis (Class Identification)
 Based on the problem statement, the following nouns were identified to become classes:
