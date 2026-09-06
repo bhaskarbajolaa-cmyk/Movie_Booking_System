@@ -35,7 +35,9 @@ Core entities include `Movie`, `Seat`, `Screen`, `Cinema`, `Show`, `ShowSeat`, `
 
 ### UML Class Diagram
 ```mermaid
+%%{init: {"class": {"curve": "stepBefore"}}}%%
 classDiagram
+    direction LR
     class Cinema {
         -String name
         -vector~Screen*~ screens
