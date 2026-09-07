@@ -316,5 +316,5 @@ sequenceDiagram
 
 ## Demo Run
 
-![Demo Output Part 1](docs/demo1.png)
-![Demo Output Part 2](docs/demo2.png)
+![Demo Output Part 1](Demo1.jpg)
+![Demo Output Part 2](Demo2.jpg)
